@@ -228,6 +228,9 @@ class App(ctk.CTk):
             if not start_date_str or not end_date_str:
                 self.show_message("Veuillez entrer les dates de début et de fin.", "red")
                 return
+            elif start_date_str > end_date_str:
+                self.show_message("La date de début doit être antérieure à la date de fin.", "red")
+                return
             data, data2 = cargo_model.fetch_data_date(start_date_str, end_date_str, token)
         else:
             self.show_message("Veuillez choisir une option entre Semaine ISO et Date.", "red")
