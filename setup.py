@@ -13,6 +13,7 @@ setup(
         'tkcalendar',
         'customtkinter',
         'requests',
+        'datetime',
     ],
     entry_points={
         'console_scripts': [
