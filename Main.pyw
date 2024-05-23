@@ -9,6 +9,5 @@ def main():
     if auth.is_authenticated():
         app = App(auth) 
         app.mainloop()
-
 if __name__ == "__main__":
     main()
