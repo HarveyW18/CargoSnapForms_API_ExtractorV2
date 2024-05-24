@@ -13,7 +13,7 @@ def get_first_run_file_path():
         application_path = os.path.dirname(sys.executable)
     else:
         application_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(application_path, 'first.enc')
+    return os.path.join(application_path, 'Project', 'first.enc')
 
 # Clé de chiffrement générée une seule fois
 KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='  # Remplacez ceci par la clé générée
@@ -60,7 +60,7 @@ def main():
             app = App(auth)
             app.mainloop()
     else:
-        print("Le script n'est plus valide, la période de deux mois est écoulée.")
+        print("Un problème est survenu. Veuillez contacter le developpeur.")
 
 if __name__ == "__main__":
     main()

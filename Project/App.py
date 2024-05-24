@@ -9,7 +9,7 @@ import re
 class App(ctk.CTk):
     def __init__(self, auth_instance, root=None):
         super().__init__(root)
-        self.auth_instance = auth_instance  # Stocker l'instance de Auth
+        self.auth_instance = auth_instance
         self.bg = self.cget("fg_color")
         self.title("GHELFER - CargoSnap")
         self.iconbitmap(get_icon_path())
@@ -31,7 +31,7 @@ class App(ctk.CTk):
 
         self.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
 
-        self.main_container = ctk.CTkFrame(self, corner_radius=8, fg_color=self.bg)  # Assurez-vous de l'attribuer à self.main_container
+        self.main_container = ctk.CTkFrame(self, corner_radius=8, fg_color=self.bg)
         self.main_container.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
 
         self.title_text("Extracteur de CargoSnap CSV", self.main_container)
