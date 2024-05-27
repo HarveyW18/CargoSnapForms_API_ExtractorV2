@@ -2,6 +2,7 @@ from .CargoSnapModel import CargoSnapModel
 from .Assets.Icon.iconpath_config import get_icon_path
 from datetime import datetime, timedelta
 import tkinter as tk
+from babel import numbers
 from tkinter import ttk
 from tkcalendar import DateEntry
 import customtkinter as ctk

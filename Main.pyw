@@ -1,14 +1,17 @@
 import os
 import sys
 from datetime import datetime, timedelta
+from babel import numbers
 from cryptography.fernet import Fernet
-from ressources.Auth import Auth
-from ressources.App import App
+from Project.Auth import Auth
+from Project.App import App
 import customtkinter as ctk
 
-# Chemin du fichier pour stocker la date 
 def get_first_run_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ressources/first.enc')
+    project_path = os.path.dirname(os.path.abspath(__file__))
+    first_run_file = os.path.join(project_path, 'Project', 'first.enc')
+    return first_run_file
+
 
 # Clé de chiffrement générée une seule fois
 KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='
@@ -45,6 +48,7 @@ def main():
     if first_run_date is None:
         first_run_date = datetime.now()
         set_first_run_date(first_run_date)
+
     if within_two_months(first_run_date):
         auth = Auth()
         auth.mainloop()
