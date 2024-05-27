@@ -2,8 +2,8 @@ import os
 import sys
 from datetime import datetime, timedelta
 from cryptography.fernet import Fernet
-from Project.Auth import Auth
-from Project.App import App
+from ressources.Auth import Auth
+from ressources.App import App
 import customtkinter as ctk
 
 # Chemin du fichier pour stocker la date 
@@ -13,7 +13,7 @@ def get_first_run_file_path():
         application_path = os.path.dirname(sys.executable)
     else:
         application_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(application_path, 'Project', 'first.enc')
+    return os.path.join(application_path, 'ressources', 'first.enc')
 
 # Clé de chiffrement générée une seule fois
 KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='

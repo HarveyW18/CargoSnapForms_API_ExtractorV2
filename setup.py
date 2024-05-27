@@ -7,8 +7,8 @@ setup(
     author='Harvey W.',
     author_email='votre.email@example.com',
     url='https://github.com/harveyw18/CargoSnap_CSV_Extractor',
-    packages=find_packages(where='Project'),
-    package_dir={'': 'Project'},
+    packages=find_packages(where='ressources'),
+    package_dir={'': 'ressources'},
     install_requires=[
         'tkcalendar',
         'customtkinter',
