@@ -3,6 +3,7 @@ from .Assets.Icon.iconpath_config import get_icon_path
 from datetime import datetime, timedelta
 import tkinter as tk
 from tkinter import ttk
+from tkcalendar import DateEntry
 import customtkinter as ctk
 import re
 
@@ -50,7 +51,6 @@ class App(ctk.CTk):
         self.message_label.pack(fill=tk.X, padx=8, pady=8)
         self.message_label.configure(text="")
 
-
     def title_text(self, text, container):
         label = ctk.CTkLabel(container, text=text, corner_radius=8, fg_color=self.bg, font=("Segoe UI", 15, "bold"))
         label.pack(fill=tk.X, padx=8, pady=8)
@@ -75,21 +75,20 @@ class App(ctk.CTk):
             return True
         return False
     
+        
     def date_entry_fields(self, container):
         frame = ctk.CTkFrame(container, fg_color=self.bg)
         frame.pack(pady=8)
 
-        validate_command = self.register(self.validate_date)
-
         def get_monday():
-            # Obtenir la date actuelle
             current_date = datetime.today()
             current_iso_week = current_date.isocalendar()[1]
-            # Récupérer le lundi de la semaine ISO actuelle
             monday = datetime.strptime(f"{current_date.year}-W{current_iso_week}-1", "%Y-W%W-%w")
             return monday.strftime("%Y-%m-%d")
-        
-        self.start_date_entry = ctk.CTkEntry(frame, width=120, height=30, border_width=1, border_color='#476A4A', placeholder_text=get_monday(), validate="key", validatecommand=(validate_command, '%P'))
+
+        self.start_date_entry = DateEntry(frame, width=12, background="#242424", foreground='white', borderwidth=1, bordercolor="#476A4A", date_pattern='yyyy-mm-dd')
+        self.start_date_entry.set_date(get_monday())
+        self.start_date_entry.configure(headersbackground="#242424", headersforeground='white', selectbackground="#476A4A", selectforeground='white', normalbackground="#242424", normalforeground='white', weekendbackground="#242424", weekendforeground='white')
         self.start_date_entry.grid(row=0, column=0, padx=5)
 
         to_label = ctk.CTkLabel(frame, text="au", corner_radius=8, fg_color=self.bg, font=("Segoe UI", 13))
@@ -99,8 +98,10 @@ class App(ctk.CTk):
             monday = datetime.strptime(get_monday(), "%Y-%m-%d")
             sunday = monday + timedelta(days=6)
             return sunday.strftime("%Y-%m-%d")
-        
-        self.end_date_entry = ctk.CTkEntry(frame, width=120, height=30, border_width=1, border_color='#476A4A', placeholder_text=get_sunday(), validate="key", validatecommand=(validate_command, '%P'))
+
+        self.end_date_entry = DateEntry(frame, width=12, background="#242424", foreground='white', borderwidth=1, bordercolor="#476A4A", date_pattern='yyyy-mm-dd')
+        self.end_date_entry.set_date(get_sunday())
+        self.end_date_entry.configure(headersbackground="#242424", headersforeground='white', selectbackground="#476A4A", selectforeground='white', normalbackground="#242424", normalforeground='white', weekendbackground="#242424", weekendforeground='white')
         self.end_date_entry.grid(row=0, column=2, padx=5)
     
     def isoweek_label(self, text, container):
@@ -109,7 +110,7 @@ class App(ctk.CTk):
         return label
     
     def current_iso_week(self):
-            return datetime.today().isocalendar()[1]
+        return datetime.today().isocalendar()[1]
     
     def isoweek_entry(self, container):
         def validate_input(text):
@@ -122,7 +123,7 @@ class App(ctk.CTk):
 
         vcmd = (self.register(validate_input), '%P')
     
-        self.isoweek_entry = ctk.CTkEntry(container, corner_radius=8, fg_color=self.bg, width=12, height=30, border_width=1, border_color='#476A4A', placeholder_text = self.current_iso_week(), validate='key', validatecommand=vcmd)
+        self.isoweek_entry = ctk.CTkEntry(container, corner_radius=8, fg_color=self.bg, width=12, height=30, border_width=1, border_color='#476A4A', placeholder_text=str(self.current_iso_week()), validate='key', validatecommand=vcmd)
         self.isoweek_entry.pack(fill=tk.X, padx=100, pady=8)
         return self.isoweek_entry
     
@@ -152,26 +153,31 @@ class App(ctk.CTk):
         def option_selected():
             choice = self.option_choice.get()
             if choice == "Semaine ISO":
-                # Desactiver les champs de saisie de date
+                # Désactiver les champs de saisie de date
                 self.start_date_entry.configure(state=tk.DISABLED)
                 self.end_date_entry.configure(state=tk.DISABLED)
                 # Activer l'entrée de la semaine ISO
                 self.isoweek_entry.configure(state=tk.NORMAL)
             elif choice == "Date":
-                # Desactiver l'entrée de la semaine ISO
+                # Désactiver l'entrée de la semaine ISO
                 self.isoweek_entry.configure(state=tk.DISABLED)
                 # Activer les champs de saisie de date
                 self.start_date_entry.configure(state=tk.NORMAL)
                 self.end_date_entry.configure(state=tk.NORMAL)
-        # Creer les boutons radio
+
+        # Créer les boutons radio
         style = ttk.Style()
         # Style des boutons radio
         style.configure("Red.TRadiobutton", 
-                background="#242424", 
-                foreground="#FFFFFF", 
-                anchor="center", 
-                font=("Segoe UI", 9),  # Ajoute une police d'écriture
-                indicatorcolor="#00FF00")  # Met le contour du cercle en vert
+                        background="#242424", 
+                        foreground="#FFFFFF", 
+                        anchor="center", 
+                        font=("Segoe UI", 9),  # Ajoute une police d'écriture
+                        indicatorcolor="#242424", 
+                        indicatordiameter=10, 
+                        indicatorrelief=tk.FLAT,
+                        highlightthickness=0)
+
         radio_sem_iso = ttk.Radiobutton(radio_frame, text="Semaine ISO", variable=self.option_choice, value="Semaine ISO", command=option_selected, style="Red.TRadiobutton")
         radio_sem_iso.pack(side=tk.LEFT, anchor='center', padx=(90, 20))
         radio_date = ttk.Radiobutton(radio_frame, text="Date", variable=self.option_choice, value="Date", command=option_selected, style="Red.TRadiobutton")
@@ -179,16 +185,14 @@ class App(ctk.CTk):
         # Choisir l'option par défaut comme Semaine ISO
         self.option_choice.set("Semaine ISO")
 
-
     def submit_button(self, container):
         button = ctk.CTkButton(container, text="Extraire", corner_radius=8, fg_color="#476A4A", command=self.use_entry_values, font=("Segoe UI", 13, "bold"))
         button.pack(fill=tk.X, padx=8, pady=8)
         return button
 
-
     def get_token(self):
         # Récupérer le token de l'instance de Auth
-        token = self.auth.get_token()
+        token = self.auth_instance.get_token()
         return token
     
     def get_iso_week(self):
@@ -196,16 +200,16 @@ class App(ctk.CTk):
         return isoweek_str
     
     def get_date_range(self):
-        start_date_str = self.start_date_entry.get().strip()
-        end_date_str = self.end_date_entry.get().strip()
+        start_date_str = self.start_date_entry.get_date().strftime('%Y-%m-%d')
+        end_date_str = self.end_date_entry.get_date().strftime('%Y-%m-%d')
         return start_date_str, end_date_str
 
     def use_entry_values(self):
         # Récupérer les valeurs des champs de saisie
-        start_date_str = self.start_date_entry.get().strip()
-        end_date_str = self.end_date_entry.get().strip()
+        start_date_str = self.start_date_entry.get_date().strftime('%Y-%m-%d')
+        end_date_str = self.end_date_entry.get_date().strftime('%Y-%m-%d')
         isoweek_str = self.isoweek_entry.get().strip()
-        filename_str = self.filename_entry.get() + f"{"_S" + isoweek_str if self.option_choice.get() == 'Semaine ISO' else ''}".strip()
+        filename_str = self.filename_entry.get() + f"_{datetime.now().year}_S{isoweek_str if self.option_choice.get() == 'Semaine ISO' else ''}".strip()
 
         # Récupérer le token à partir de l'instance de Auth
         token = self.auth_instance.get_token()
@@ -260,5 +264,3 @@ class App(ctk.CTk):
         """Efface le message affiché dans le label message_label."""
         self.message_label.configure(text="")
 
-    def clear_message(self):
-        self.message_label.configure(text="")

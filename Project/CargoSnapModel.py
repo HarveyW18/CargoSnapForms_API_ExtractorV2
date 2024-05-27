@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
+import unicodedata
 import requests
 import csv
 import re
 import os
-
 
 class CargoSnapModel:
     def __init__(self):
@@ -103,11 +103,11 @@ class CargoSnapModel:
             os.makedirs(export_dir, exist_ok=True)
 
             file_path = os.path.join(export_dir, file_name + ".csv")
-            with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
+            with open(file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
                 fieldnames = ["BR", "Quality mark", "Potential of storage", "Sum Up", "Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
                 writer.writeheader()
-                
+
                 for item in data["data"]:
                     row_data = {key: '' for key in fieldnames}
                     # Utiliser une expression régulière pour rechercher les 5 chiffres après "BR" dans le scan_code
@@ -116,27 +116,27 @@ class CargoSnapModel:
                     if match:
                         row_data["BR"] = match.group(1)
                         # Récupérer les champs "BR", "Quality mark", "Potential of storage" et "Sum Up" depuis item
-                        for form_field in item.get("form", {}).get("fields", []):
-                            field_label = form_field.get("label", "")
-                            field_value = form_field.get("value", "").replace("\n", " ")
-                            if field_label.strip() in row_data:
-                                row_data[field_label.strip()] = field_value
+                        for form_field in item.get(u"form", {}).get(u"fields", []):
+                            field_label = form_field.get(u"label", "").strip()
+                            field_value = form_field.get(u"value", "").replace("\n", " ")
+                            if field_label in row_data:
+                                row_data[field_label] = field_value
 
                         # Trouver l'élément correspondant dans data2 en fonction du scan_code
                         corresponding_item2 = next((item2 for item2 in data2["data"] if item2.get("scan_code") == item.get("scan_code")), None)
                         if corresponding_item2:
                             for form_field in corresponding_item2.get("form", {}).get("fields", []):
-                                field_label = form_field.get("label", "")
+                                field_label = form_field.get("label", "").strip()
                                 field_value = form_field.get("value", "").replace("\n", " ")
-                                if field_label.strip() in row_data:
-                                    if field_label.strip() in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                        row_data[field_label.strip()] = field_value if field_value else "No"
+                                if field_label in row_data:
+                                    if field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
+                                        row_data[field_label] = field_value if field_value else "No"
                                     else:
-                                        row_data[field_label.strip()] = field_value
+                                        row_data[field_label] = field_value
                         else:
                             # Si aucun élément correspondant n'est trouvé dans data2, attribuer "No" aux champs restants de row_data
                             for field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                row_data[field_label] = "no"
+                                row_data[field_label] = "No"
                         writer.writerow(row_data)
 
             return "Données exportées avec succès dans le fichier CSV."

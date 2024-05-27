@@ -6,7 +6,7 @@ from Project.Auth import Auth
 from Project.App import App
 import customtkinter as ctk
 
-# Chemin du fichier pour stocker la date de première exécution
+# Chemin du fichier pour stocker la date 
 def get_first_run_file_path():
     # Utilise le répertoire du script ou de l'exécutable
     if getattr(sys, 'frozen', False):
@@ -16,7 +16,7 @@ def get_first_run_file_path():
     return os.path.join(application_path, 'Project', 'first.enc')
 
 # Clé de chiffrement générée une seule fois
-KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='  # Remplacez ceci par la clé générée
+KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='
 
 cipher_suite = Fernet(KEY)
 
@@ -46,13 +46,10 @@ def within_two_months(first_run_date):
     return current_date <= end_date
 
 def main():
-    # Vérifiez si c'est la première exécution
     first_run_date = get_first_run_date()
     if first_run_date is None:
-        # C'est la première exécution, enregistrez la date
         first_run_date = datetime.now()
         set_first_run_date(first_run_date)
-
     if within_two_months(first_run_date):
         auth = Auth()
         auth.mainloop()
