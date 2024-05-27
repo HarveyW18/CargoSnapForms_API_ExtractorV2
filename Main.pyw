@@ -8,12 +8,7 @@ import customtkinter as ctk
 
 # Chemin du fichier pour stocker la date 
 def get_first_run_file_path():
-    # Utilise le répertoire du script ou de l'exécutable
-    if getattr(sys, 'frozen', False):
-        application_path = os.path.dirname(sys.executable)
-    else:
-        application_path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(application_path, 'ressources', 'first.enc')
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ressources/first.enc')
 
 # Clé de chiffrement générée une seule fois
 KEY = b'inWiR-h6TmWAHzGrzqHEFco9d2LaYOqwJ-6nA3bog-k='

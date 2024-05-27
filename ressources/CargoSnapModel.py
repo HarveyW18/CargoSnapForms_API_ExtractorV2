@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import unicodedata
 import requests
 import csv
 import re
@@ -116,9 +115,9 @@ class CargoSnapModel:
                     if match:
                         row_data["BR"] = match.group(1)
                         # Récupérer les champs "BR", "Quality mark", "Potential of storage" et "Sum Up" depuis item
-                        for form_field in item.get(u"form", {}).get(u"fields", []):
-                            field_label = form_field.get(u"label", "").strip()
-                            field_value = form_field.get(u"value", "").replace("\n", " ")
+                        for form_field in item.get("form", {}).get("fields", []):
+                            field_label = form_field.get("label", "").strip()
+                            field_value = form_field.get("value", "").replace("\n", " ")
                             if field_label in row_data:
                                 row_data[field_label] = field_value
 
