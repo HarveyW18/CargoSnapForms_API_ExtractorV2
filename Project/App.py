@@ -104,6 +104,14 @@ class App(ctk.CTk):
         self.end_date_entry.set_date(get_sunday())
         self.end_date_entry.configure(headersbackground="#242424", headersforeground='white', selectbackground="#476A4A", selectforeground='white', normalbackground="#242424", normalforeground='white', weekendbackground="#242424", weekendforeground='white')
         self.end_date_entry.grid(row=0, column=2, padx=5)
+
+    def get_day_date_start(self):
+        day_start = self.start_date_entry.get_date().strftime("%m_%d")
+        return day_start
+
+    def get_day_date_end(self):
+        day_end = self.end_date_entry.get_date().strftime("%d")
+        return day_end
     
     def isoweek_label(self, text, container):
         label = ctk.CTkLabel(container, text=text, corner_radius=8, fg_color=self.bg, font=("Segoe UI", 14))
@@ -210,7 +218,7 @@ class App(ctk.CTk):
         start_date_str = self.start_date_entry.get_date().strftime('%Y-%m-%d')
         end_date_str = self.end_date_entry.get_date().strftime('%Y-%m-%d')
         isoweek_str = self.isoweek_entry.get().strip()
-        filename_str = self.filename_entry.get() + f"_{datetime.now().year}_S{isoweek_str if self.option_choice.get() == 'Semaine ISO' else ''}".strip()
+        filename_str = self.filename_entry.get() + f"_{datetime.now().year}{'_S' + isoweek_str if self.option_choice.get() == 'Semaine ISO' else f'_{self.get_day_date_start()}-{self.get_day_date_end()}'}".strip()
 
         # Récupérer le token à partir de l'instance de Auth
         token = self.auth_instance.get_token()

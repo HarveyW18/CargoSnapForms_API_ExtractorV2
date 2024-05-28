@@ -129,13 +129,13 @@ class CargoSnapModel:
                                 field_value = form_field.get("value", "").replace("\n", " ")
                                 if field_label in row_data:
                                     if field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                        row_data[field_label] = field_value if field_value else "No"
+                                        row_data[field_label] = field_value if field_value else "no"
                                     else:
                                         row_data[field_label] = field_value
                         else:
                             # Si aucun élément correspondant n'est trouvé dans data2, attribuer "No" aux champs restants de row_data
                             for field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                row_data[field_label] = "No"
+                                row_data[field_label] = "no"
                         writer.writerow(row_data)
 
             return "Données exportées avec succès dans le fichier CSV."
