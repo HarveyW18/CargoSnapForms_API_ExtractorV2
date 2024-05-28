@@ -103,13 +103,6 @@ class App(ctk.CTk):
         self.end_date_entry = ctk.CTkEntry(frame, width=120, height=30, border_width=1, border_color='#476A4A', placeholder_text=get_sunday(), validate="key", validatecommand=(validate_command, '%P'))
         self.end_date_entry.grid(row=0, column=2, padx=5)
 
-    def get_day_date_start(self):
-        day_start = self.start_date_entry.get_date().strftime("%m_%d")
-        return day_start
-
-    def get_day_date_end(self):
-        day_end = self.end_date_entry.get_date().strftime("%d")
-        return day_end
     
     def isoweek_label(self, text, container):
         label = ctk.CTkLabel(container, text=text, corner_radius=8, fg_color=self.bg, font=("Segoe UI", 14))
