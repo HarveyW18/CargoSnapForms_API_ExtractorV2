@@ -121,22 +121,22 @@ class CargoSnapModel:
                             if field_label in row_data:
                                 row_data[field_label] = field_value
 
-                        # Trouver l'élément correspondant dans data2 en fonction du scan_code
-                        corresponding_item2 = next((item2 for item2 in data2["data"] if item2.get("scan_code") == item.get("scan_code")), None)
-                        if corresponding_item2:
-                            for form_field in corresponding_item2.get("form", {}).get("fields", []):
-                                field_label = form_field.get("label", "").strip()
-                                field_value = form_field.get("value", "").replace("\n", " ")
-                                if field_label in row_data:
-                                    if field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                        row_data[field_label] = field_value if field_value else "No"
-                                    else:
-                                        row_data[field_label] = field_value
-                        else:
-                            # Si aucun élément correspondant n'est trouvé dans data2, attribuer "No" aux champs restants de row_data
-                            for field_label in ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]:
-                                row_data[field_label] = "No"
-                        writer.writerow(row_data)
+                        # Liste des champs à vérifier
+                    fields_to_check = ["Sorting", "Relabelling", "Repalettizing", "Resizing", "Rejection"]
+
+                    # Trouver l'élément correspondant dans data2 en fonction du scan_code
+                    corresponding_item2 = next((item2 for item2 in data2["data"] if item2.get("scan_code") == item.get("scan_code")), None)
+
+                    if corresponding_item2:
+                        form_fields = {field.get("label", "").strip(): field.get("value", "").replace("\n", " ") for field in corresponding_item2.get("form", {}).get("fields", [])}
+                        for field_label in fields_to_check:
+                            row_data[field_label] = form_fields.get(field_label, "no")
+                    else:
+                        # Si aucun élément correspondant n'est trouvé dans data2, attribuer "No" aux champs restants de row_data
+                        for field_label in fields_to_check:
+                            row_data[field_label] = "no"
+
+                    writer.writerow(row_data)
 
             return "Données exportées avec succès dans le fichier CSV."
         else:
